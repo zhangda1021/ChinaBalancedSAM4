@@ -1,0 +1,45 @@
+PROD: PRODUCTION
+DX: DOMESTIC OUTFLOW
+X: EXPORT
+RC: IMPORT
+DRC: DOMESTIC INFLOW
+COAL: COAL MINING AND PROCESSING
+FG: FUEL GAS, INCLUDING COKE GAS, OTHER GAS, LPG, REFINEARY GAS
+OIL: CRUDE OIL
+ROIL: REFINED OIL
+NG: NATURAL GAS
+ELEH: ELECTRICITY AND HEAT
+OTHE: OTHER ENERGY
+AGR: AGRICULTURE
+IND: NON-ENERGY SECONDARY INDUCTRY
+CON: CONSTRUCTION
+TP: TRANSPORTATION AND POST
+WRHR: WHOLESALE, RETAIL, HOTEL AND RESTRAURANT
+OTH: OTHER SERVICE INDUSTRY
+FU: HOUSEHOLD AND GOVERNMENT CONSUMPTION
+
+Q0: How to deal with the Chinese Airplanes & Ships in Refueling Abroad, and Foreign Airplanes & Ships in Refueling in China?
+A0: To treat them as import and export
+
+Q1: How to deal with the statistical difference?
+A1: To add it on the domestic import
+
+Q1.5: If the statistical difference is not right...(coal for sichuan)
+A1.5: To update the statistical difference at first... + discrepancy in conversion sector (coal for xinjiang)
+
+Q2: How to deal with the inventory?
+A2: To leave it in a new column
+
+Q3: How to deal with the loss?
+A3: To add it on the residential use (?????????:????????(??)?????????????????????????????????????????????????????;?????  ????????????????????????????????????????????????????????)
+
+Q4: In the energy supply block, the subtotal is not equal to the sum of all items... (all the provinces)
+A4: To add the discrepancy on the production.
+
+Q5: In the final consumption block, the subtotal is not equal to the sum of all items... 
+A5: To add the discrepancy on the residential consumption.
+
+Q6: Why the sequence of gdx read is different from xls?
+A6: GDX neglect the empty element firstly when it read the data.
+
+NOTE: There is a fatal wrong of sign in 0401.xls (export should be negative for kerosene, coke input should be negative for coke and other coking products)

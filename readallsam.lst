@@ -1,0 +1,275 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 16:07:31 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  *       READ PROVINCIAL SAM TABLE (UNIT:10,000 yuan)
+   2   
+   5   
+   6  set     r       Chinese provinces       /BJ,TJ,HE,SX,NM,LN,JL,HL,SH,JS,ZJ,AH,FJ,JX,SD,HA,HB,HN,GD,GX,HI,CQ,SC,GZ,YN,SN,GS,QH,NX,XJ/;
+   7   
+   8  SET     f       Factors /cap,lab/,
+   9   
+  10          g       Goods and final demands/
+  11          AGR     "Crop cultivation,Forestry,Livestock and livestock products and Fishery"
+  12          COL     "Coal mining and processing"
+  13          CRU     "Crude petroleum products"
+  14          GAS     "natural gas products"
+  15          OMN     "Metal minerals mining and Non-metal minerals and other mining"
+  16          OIL     "Petroleum refining, coking and nuclear fuels"
+  17          EIS     "Energy intensive industries"
+  18          MAN     "Other manufacturing industries"
+  19          ELE     "Electricity and heat"
+  20          GDT     "Gas distribution"
+  21          WTR     "Water"
+  22          CON     "Construction"
+  23          TRN     "Transport and Post"
+  24          SER     "Service"
+  25          c       "Private consumption"
+  26          g       "Government"
+  27          i       "Investment"
+  28          /,
+  29   
+  30          i(g)    "Goods and sectors" /
+  31          AGR
+  32          COL
+  33          CRU
+  34          GAS
+  35          OMN
+  36          OIL
+  37          EIS
+  38          MAN
+  39          ELE
+  40          GDT
+  41          WTR
+  42          CON
+  43          TRN
+  44          SER
+  45          /
+  46          ;
+  47  alias(i,j);
+  48   
+  49  set     ri   raw data rows indices   /1*49/;
+  50  set     rj   raw data columns indices /1*58/;
+  51   
+  52  parameter rawsam(r,ri,rj)  Base year  data
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\rawsam\merged.gdx
+--- LOAD  rawsam = 1:rawsam
+  55   
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 16:07:31 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  56  *       Sector mapping
+  57  set     mapiri(ri,i)/
+  58          1.AGR,
+  59          2.COL,
+  60          3.CRU,
+  61          4.OMN,
+  62          5.OMN,
+  63          6.MAN,
+  64          7.MAN,
+  65          8.MAN,
+  66          9.MAN,
+  67          10.MAN,
+  68          11.OIL,
+  69          12.EIS,
+  70          13.EIS,
+  71          14.EIS,
+  72          15.MAN,
+  73          16.MAN,
+  74          17.MAN,
+  75          18.MAN,
+  76          19.MAN,
+  77          20.MAN,
+  78          21.MAN,
+  79          22.MAN,
+  80          23.ELE,
+  81          24.GDT,
+  82          25.WTR,
+  83          26.CON,
+  84          27.TRN,
+  85          28.TRN,
+  86          29.SER,
+  87          30.SER,
+  88          31.SER,
+  89          32.SER,
+  90          33.SER,
+  91          34.SER,
+  92          35.SER,
+  93          36.SER,
+  94          37.SER,
+  95          38.SER,
+  96          39.SER,
+  97          40.SER,
+  98          41.SER,
+  99          42.SER
+ 100  /;
+ 101   
+ 102  SET mapjrj(rj,j)/
+ 103          1.AGR,
+ 104          2.COL,
+ 105          3.CRU,
+ 106          4.OMN,
+ 107          5.OMN,
+ 108          6.MAN,
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 16:07:31 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 109          7.MAN,
+ 110          8.MAN,
+ 111          9.MAN,
+ 112          10.MAN,
+ 113          11.OIL,
+ 114          12.EIS,
+ 115          13.EIS,
+ 116          14.EIS,
+ 117          15.MAN,
+ 118          16.MAN,
+ 119          17.MAN,
+ 120          18.MAN,
+ 121          19.MAN,
+ 122          20.MAN,
+ 123          21.MAN,
+ 124          22.MAN,
+ 125          23.ELE,
+ 126          24.GDT,
+ 127          25.WTR,
+ 128          26.CON,
+ 129          27.TRN,
+ 130          28.TRN,
+ 131          29.SER,
+ 132          30.SER,
+ 133          31.SER,
+ 134          32.SER,
+ 135          33.SER,
+ 136          34.SER,
+ 137          35.SER,
+ 138          36.SER,
+ 139          37.SER,
+ 140          38.SER,
+ 141          39.SER,
+ 142          40.SER,
+ 143          41.SER,
+ 144          42.SER
+ 145  /;
+ 146   
+ 147   
+ 148  PARAMETERS
+ 149          vafm(i,g,r),
+ 150          vfm(f,i,r),
+ 151          vom(g,r),
+ 152          rto(i,r),
+ 153          vxm(i,r),
+ 154          vim(i,r),
+ 155          vdxm(i,r),
+ 156          vdim(i,r),
+ 157          resid(i,r)
+ 158  ;
+ 159   
+ 160  vafm(i,j,r) = sum((mapiri(ri,i),mapjrj(rj,j)),rawsam(r,ri,rj));
+ 161  vafm(i,"c",r) = sum(mapiri(ri,i),rawsam(r,ri,"46"));
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 16:07:31 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 162  vafm(i,"g",r) = sum(mapiri(ri,i),rawsam(r,ri,"47"));
+ 163  *       Ignore inventory
+ 164  vafm(i,"i",r) = sum(mapiri(ri,i),rawsam(r,ri,"49"));
+ 165   
+ 166  vfm("lab",j,r) = sum(mapjrj(rj,j),rawsam(r,"44",rj));
+ 167  vfm("cap",j,r) = sum(mapjrj(rj,j),rawsam(r,"46",rj)+rawsam(r,"47",rj));
+ 168   
+ 169  rto(j,r) = sum(mapjrj(rj,j),rawsam(r,"45",rj));
+ 170   
+ 171  vxm(i,r) = sum(mapiri(ri,i),rawsam(r,ri,"52"));
+ 172  vim(i,r) = sum(mapiri(ri,i),rawsam(r,ri,"55"));
+ 173  vdxm(i,r) = sum(mapiri(ri,i),rawsam(r,ri,"53"));
+ 174  vdim(i,r) = sum(mapiri(ri,i),rawsam(r,ri,"56"));
+ 175   
+ 176  *       Put inventory in the residual
+ 177  resid(i,r) = sum(mapiri(ri,i),rawsam(r,ri,"57")+rawsam(r,ri,"50"));
+ 178   
+ 179  *       If capital input is negative, set it to zero and distribute the negative terms on labor input and tax
+ 180  vfm("lab",i,r)$(vfm("cap",i,r)<0) = vfm("lab",i,r) + vfm("cap",i,r) * vfm("lab",i,r) / (vfm("lab",i,r) + rto(i,r));
+ 181  rto(i,r)$(vfm("cap",i,r)<0) = rto(i,r) + vfm("cap",i,r) * rto(i,r) / (vfm("lab",i,r) + rto(i,r));
+ 182  vfm("cap",i,r)$(vfm("cap",i,r)<0) = 0;
+ 183   
+ 184  *       Adjust capital input in OIL in Gansu
+ 185  vfm("lab","OIL","GS") = 0;
+ 186  rto("OIL","GS") = 0;
+ 187   
+ 188  display resid;
+ 189   
+ 190   
+EXIT C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readallsam.gms
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 16:07:31 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readallsam.gms
+     2       53 GDXIN          1      53  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\rawsam\merged.gdx
+     3      191 EXIT           1     191  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readallsam.gms
+
+
+COMPILATION TIME     =        0.015 SECONDS      5 Mb  WEX238-238 Apr  3, 2012
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 16:07:31 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    188 PARAMETER resid  
+
+             BJ          TJ          HE          SX          NM          LN          JL          HL          SH          JS          ZJ          AH          FJ          JX          SD          HA          HB          HN          GD          GX          HI
+
+AGR   28451.980  -46934.873 -2.80252E+6  -73389.000   51398.760  889203.040 -198832.180  170616.100   41814.289   21083.180              286302.230  196692.350  697750.000 -2.52086E+6  664455.298   16817.600 -489296.970  -76110.293  506715.190   98501.443
+COL  239561.220   13831.443  505528.569  151142.000  164909.940   85659.680   15512.300  121274.200   70086.909   53725.660     108.000   56393.050   -9724.160  180970.000 3092844.112   10877.054    -141.249  -27404.350  229462.091  -85771.010  -39731.478
+CRU    7277.550    2057.141  -89104.236  -92323.000              387170.710   49505.200  -76104.800  109296.908    8420.100               -9145.950                          748861.761  -32201.820    4025.587              184324.637              177703.490
+OMN   71130.750    2202.571 -362453.580 -852802.000   28000.220  142831.830   16126.800   42252.300   97719.129   24618.060   37244.000  211497.320   39236.780 1418485.000 1247173.890   72564.541   13242.061   37268.740  491408.204 -211921.660   18939.094
+OIL  592067.770  133823.878 7736254.680 -238084.000   50170.840  210737.080   23963.100   40995.700  104521.868 -229067.580   60851.000   21036.730  127554.950    6437.000  359940.243   44500.236    9598.250  -18830.910  655078.727 -263298.330   44382.767
+EIS 1108060.620  726313.951 -1.10057E+6 7125954.000  584302.104 1433911.830  412605.100  199419.100  897627.616 3554090.860  722460.000  827688.140  527827.860  795580.000 5973846.760 1859344.309   86796.110  391035.350 2054265.872  -74289.880  131609.191
+MAN 2194372.550 1048490.334  868266.211 -3.32350E+6  230213.991 1996836.330 1293775.300  902370.300 2055774.199 3752241.460 2083311.000  814393.910 2110803.370  715071.000 7361729.793  608231.622  879355.405  816118.000 7673755.148 1061161.560  136669.588
+ELE                                                                           20620.100               37952.359                                                  -15637.000 -2.22068E+6               17197.023  -17806.320  256843.234                2412.048
+GDT                              29.853   65156.000    4409.520                 286.300                            8864.100                                        -147.000  -42696.727      26.825    2224.666    -188.740  -16048.243  -36491.850    1684.637
+WTR                                       60782.000    1118.580                -534.100                2350.220  -76694.410                                      -20015.000  -47320.093                 984.547  -22825.530  450030.614                 176.536
+CON                                                   67432.718 -2.15012E+6 -325700.000             1612841.896       1.010                  -0.500                         -4.02077E+6
+TRN   69647.470  293297.557   60079.269    6369.000   53517.588   66073.780  565628.070   57220.600   -2480.510   52374.560   45468.000   49903.880  357084.430       9.000 1602148.559     348.390  -19826.071  -12728.940   86732.948  219166.540   28933.676
+SER  446512.690  238007.122  677514.134  118895.000  541416.036   30150.550   63536.000  132888.200  243395.116  266285.830  163433.000  272678.350  247324.360  466792.000 -3.30481E+6    2053.549 -219173.929  237659.670  289110.241  913829.440   27919.007
+
+  +          CQ          SC          GZ          YN          SN          GS          QH          NX          XJ
+
+AGR   -2107.360 1878558.259  157558.290  577051.000   19231.885  714669.980  477968.740  117796.810  -66954.761
+COL  -75713.240   37198.892    7777.210  -89730.000   43757.102 -1.56604E+6 -167260.830   28564.080    3526.175
+CRU   -1501.610    2457.068    5253.480      32.000  -56448.098 -6.07898E+6  608994.540   15103.330   18479.215
+OMN   -6010.330   47305.567   56627.750 -120874.000  160367.895 -4.50074E+6  349314.790   26502.930   28617.150
+OIL   -6601.690   12760.994   16313.280   49267.000   47671.884 4842750.490 -1.16605E+6  127948.840  119507.953
+EIS -196075.450 -379312.615  330537.160  262140.000  525076.205 3322507.810 1292196.418  119938.650  267413.595
+MAN -440558.510  511699.094  -74656.080 -196602.000  906196.851 -2.61321E+6 -1.53850E+6   48955.310  767599.130
+ELE -128764.940   25578.315               15764.000    1097.239 -711543.320 -1.11873E+6   44720.060
+GDT   15965.810   11690.322                6503.000    -660.138   24784.430   -5251.160     306.860     326.015
+WTR   -1638.610   15519.884               -3951.000     453.627 -352254.340  -90690.772     742.120     -33.910
+CON  635904.220 -802833.503                                     6481762.010 2349175.542   34667.850
+TRN   29328.250    3256.366   25898.210               30963.669  131294.790 -614744.936   -1716.690   34282.636
+SER -524533.720  436221.357   66890.670               42563.234 1419187.520 -213162.286   65088.490   67579.246
+
+
+
+EXECUTION TIME       =        0.078 SECONDS     11 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readallsam.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readallsam.lst

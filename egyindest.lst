@@ -1,0 +1,173 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   3   
+   4  *SAM table
+   5  set     e        energy product  /
+   6           coal    Coal,
+   7           oil     Crude oil,
+   8           roil    Refined oil,
+   9           ng      Natural gas,
+  10           eleh    Electricity & heat,
+  11           othe    Other energy/;
+  12   
+  13  set      ebti   /
+  14           PROD    Production,
+  15           DX      Domestic outflow,
+  16           X       Export,
+  17           DRC     Domestic inflow,
+  18           RC      Import,
+  19           COL
+  20           CRU
+  21           OIL
+  22           GAS
+  23           ELE
+  24           AGR
+  25           IND
+  26           OMN
+  27           EIS
+  28           MAN
+  29           WTR
+  30           CON
+  31           TRN
+  32           SER
+  33           HHG
+  34  /;
+  35   
+  36  SET     f       Factors /cap,lab/,
+  37          g       Goods and final demands/
+  38          AGR     "Crop cultivation,Forestry,Livestock and livestock products and Fishery"
+  39          COL     "Coal mining and processing"
+  40          CRU     "Crude petroleum products"
+  41          GAS     "natural gas products"
+  42          OMN     "Metal minerals mining and Non-metal minerals and other mining"
+  43          OIL     "Petroleum refining, coking and nuclear fuels"
+  44          EIS     "Energy intensive industries"
+  45          MAN     "Other manufacturing industries"
+  46          ELE     "Electricity and heat"
+  47          GDT     "Gas distribution"
+  48          WTR     "Water"
+  49          CON     "Construction"
+  50          TRN     "Transport and Post"
+  51          SER     "Service"
+  52          c       "Private consumption"
+  53          g       "Government"
+  54          i       "Investment"
+  55          /,
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  56          i(g)    "Goods and sectors" /
+  57          AGR
+  58          COL
+  59          CRU
+  60          GAS
+  61          OMN
+  62          OIL
+  63          EIS
+  64          MAN
+  65          ELE
+  66          GDT
+  67          WTR
+  68          CON
+  69          TRN
+  70          SER
+  71          /
+  72          ind(i)/
+  73          OMN,
+  74          EIS,
+  75          MAN,
+  76          WTR/
+  77          ;
+  78  alias(i,j);
+  79   
+  80  set      r Chinese provinces       /BJ,TJ,HE,SX,NM,LN,JL,HL,SH,JS,ZJ,AH,FJ,JX,SD,HA,HB,HN,GD,GX,HI,CQ,SC,GZ,YN,SN,GS,QH,NX,XJ/;
+  81   
+  82  parameter egyadjusted(e,ebti,r),nh_prov(r),nh;
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\egybalance.gdx
+--- LOAD  egyadjusted = 38:egyadjusted
+  85   
+  86  PARAMETERS
+  87          vafm(i,g,r)
+  88  ;
+  89   
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\allsam.gdx
+--- LOAD  vafm = 11:vafm
+  92   
+  93  *       Estimate disaggregated energy use
+  94  PARAMETERS indshr(e,ind,r);
+  95   
+  96  indshr("coal",ind,r) = vafm("COL",ind,r) / sum(ind.local,vafm("COL",ind,r));
+  97  indshr("oil",ind,r)$(sum(ind.local,vafm("CRU",ind,r))) = vafm("CRU",ind,r) / sum(ind.local,vafm("CRU",ind,r));
+  98  indshr("ng",ind,r)$(sum(ind.local,vafm("CRU",ind,r))) = vafm("CRU",ind,r) / sum(ind.local,vafm("CRU",ind,r));
+  99  indshr("roil",ind,r) = vafm("OIL",ind,r) / sum(ind.local,vafm("OIL",ind,r));
+ 100  indshr("eleh",ind,r) = vafm("ELE",ind,r) / sum(ind.local,vafm("ELE",ind,r));
+ 101  indshr("othe",ind,r) = vafm("ELE",ind,r) / sum(ind.local,vafm("ELE",ind,r));
+ 102   
+ 103  indshr(e,ind,r)$(indshr(e,ind,r)<0.001) = 0;
+ 104   
+ 105  egyadjusted(e,"OMN",r) =  egyadjusted(e,"IND",r) * indshr(e,"OMN",r);
+ 106  egyadjusted(e,"EIS",r) =  egyadjusted(e,"IND",r) * indshr(e,"EIS",r);
+ 107  egyadjusted(e,"MAN",r) =  egyadjusted(e,"IND",r) * indshr(e,"MAN",r);
+ 108  egyadjusted(e,"WTR",r) =  egyadjusted(e,"IND",r) * indshr(e,"WTR",r);
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 109   
+ 110  egyadjusted(e,"IND",r) = 0;
+ 111   
+ 112  PARAMETERS indcons(ebti);
+ 113  indcons(ebti) = sum(r,egyadjusted("COAL",ebti,r) + egyadjusted("ROIL",ebti,r) + egyadjusted("NG",ebti,r) +egyadjusted("ELEH",ebti,r)+ egyadjusted("OTHE",ebti,r));
+ 114  display indcons;
+ 115   
+ 116  *       Estimate hh and gov energy use (No government energy use)
+ 117   
+ 118   
+EXIT C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egyindest.gms
+
+**** LIST OF STRAY NAMES - CHECK DECLARATIONS FOR SPURIOUS COMMAS
+**** STRAY NAME nh OF TYPE PARAM
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egyindest.gms
+     2       83 GDXIN          1      83  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\egybalance.gdx
+     3       90 GDXIN          1      90  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\allsam.gdx
+     4      119 EXIT           1     119  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egyindest.gms
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 Mb  WEX238-238 Apr  3, 2012
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    114 PARAMETER indcons  
+
+PROD 290846.221,    DX   131777.785,    X     10325.467,    DRC  131777.785,    RC    14703.869,    ELE  114724.143,    AGR    6557.236,    OMN    4054.660,    EIS   89798.958,    MAN   29802.646,    WTR     617.804,    CON    3213.897,    TRN   17926.803
+SER   10553.420,    HHG   17812.759
+
+
+
+EXECUTION TIME       =        0.000 SECONDS      4 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egyindest.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egyindest.lst

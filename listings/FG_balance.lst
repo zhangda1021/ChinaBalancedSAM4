@@ -1,0 +1,142 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/14/13 13:54:33 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   4   
+   5  *SAM table
+   6  set     e        energy product  /
+   7           coal    Coal,
+   8           oil     Crude oil,
+   9           roil    Refined oil,
+  10           ng      Natural gas,
+  11           eleh    Electricity & heat,
+  12           othe    Other energy/;
+  13   
+  14  set      i      /
+  15           PROD    Production,
+  16           DX      Domestic outflow,
+  17           X       Export,
+  18           DRC     Domestic inflow,
+  19           RC      Import,
+  20           COL
+  21           CRU
+  22           OIL
+  23           GAS
+  24           ELE
+  25           AGR
+  26           IND
+  27           CON
+  28           TRP
+  29           SER
+  30           HHG     Household + government
+  31  /;
+  32   
+  33  set      r Chinese provinces       /BJ,TJ,HE,SX,NM,LN,JL,HL,SH,JS,ZJ,AH,FJ,JX,SD,HA,HB,HN,GD,GX,HI,CQ,SC,GZ,YN,SN,GS,QH,NX,XJ/;
+  34   
+  35  parameter egy_prov(e,i,r),egy_bench(e,i),nh_prov(r);
+  36   
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\egyaggr.gdx
+--- LOAD  egy_prov = 7:egy_prov
+--- LOAD  egy_bench = 8:egy_bench
+--- LOAD  nh_prov = 9:nh_prov
+  41  display egy_bench,egy_prov,nh_prov;
+  42   
+  43   
+  44  *----------------------------------------------*
+  45  *       Balance provincial energy data         *
+  46  *----------------------------------------------*
+  47  parameter
+  48          egy_provsum(i)  Pronvincial sum data.
+  49          lamda           Panalty parameter;
+  50   
+  51  egy_provsum(i) = sum(r,egy_prov('FG',i,r));
+****                                     $116,170
+  52  *If provincial sum is equal to zero, set the benchmark value to zero
+  53  egy_bench('FG',i)$(egy_provsum(i)=0) = 0;
+****               $170
+  54   
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/14/13 13:54:33 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  55  lamda = 1000;
+  56   
+  57  variable
+  58          x(i,r)  Adjusted provincial EBT value,
+  59          j               Objective function;
+  60   
+  61  Equation
+  62          obj,
+  63          benchind,
+  64          balance(r),
+  65          trade;
+  66   
+  67  obj..
+  68          j =e= sum((r,i)$(egy_prov('FG',i,r)>1e-5),sqr(x(i,r)/egy_prov('FG',i,r)-1))
+****                                       $170                                $170
+  69  + lamda * sum(i$((not((sameas(i,"DRC") or (sameas(i,"DX"))))) and (egy_bench('FG',i)>1e-5)),sum(r,sqr(x(i,r)/egy_bench('FG',i) - 1)));
+****                                                                                  $170                                      $170
+  70   
+  71  benchind..
+  72          sum(r,x("IND",r)) =e= egy_bench('FG',"IND");
+****                                             $170
+  73   
+  74  balance(r)..
+  75          2*((x("PROD",r) + x("DRC",r) + x("RC",r))) =e= sum(i,x(i,r));
+  76   
+  77  trade..
+  78          sum(r,x("DX",r)) =e= sum(r,x("DRC",r));
+  79   
+  80  x.l(i,r) = egy_prov('FG',i,r);
+****                         $170
+  81  *x.l(e,i,r)$(not((sameas(i,"DRC") or (sameas(i,"DX")))))= egy_prov(e,i,r)/egy_provsum(e,i)*egy_bench(e,i);
+  82  x.fx(i,r)$(x.l(i,r)=0) = 0;
+  83  * Fix energy use in transportation and final use
+  84  x.fx("TRP",r)=x.l("TRP",r);
+  85  x.fx("HHG",r)=x.l("HHG",r);
+  86   
+  87   
+  88  Model   gua /obj,benchind,balance,trade/;
+  89  gua.iterlim=1000;
+  90  Solve gua minimizing j using nlp;
+****                                  $257
+  91   
+EXIT C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egybalance.gms
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/14/13 13:54:33 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Error Messages
+
+
+116  Label is unknown
+170  Domain violation for element
+257  Solve statement not checked because of previous errors
+
+**** 10 ERROR(S)   0 WARNING(S)
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/14/13 13:54:33 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egybalance.gms
+     2       37 GDXIN          1      37  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\data\gdx\egyaggr.gdx
+     3       92 EXIT           1      92  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egybalance.gms
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\egybalance.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\listings\FG_balance.lst
+
+**** USER ERROR(S) ENCOUNTERED

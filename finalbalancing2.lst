@@ -1,0 +1,821 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+       
+              Production activities   A (30)
+              Commodities             C (30)
+              Primary Factors         F (2)
+              Households              H (1)
+              Central Government      G1(1)
+              Provincial Government   G2(1)
+              Types of taxes          T (4)
+              Rest of country         DX(1)
+              Rest of world           X (1)
+              Investment-savings      I (2)
+       
+      Here is a "MAP" of the SAM with the names of the submatrices which
+      contain data.  All cells with no labels are empty:
+       
+       
+       
+                 A       C        F       H      G1      G2       T       DX      X      I1      I2
+              ----------------------------------------------------------------------------------------
+      A       |       |   ac  |       |       |       |       |   sa  |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      C       |   ca  |       |       |   ch  |       |  g2d  |       |   der |   er  |  cs1  |  cs2  |
+              ----------------------------------------------------------------------------------------
+      F       |   fa  |       |       |       |       |       |       |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      H       |       |       |   hf  |       |       |  hg2  |       |   dhr |   hr  |       |       |
+              ----------------------------------------------------------------------------------------
+      G1      |       |       |       |       |       |  g1g2 |       |       |       |  cg1s |       |
+              ----------------------------------------------------------------------------------------
+      G2      |       |       |       |       | g2g1  |       |   tr  |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      T       |   ta  |       |       |       |       |       |       |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      DX      |       |  drc  |       |  drh  |       |       |       |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      X       |       |   rc  |       |   rh  |       |       |       |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      I1      |       |       |   dp  |  psv1 | g1sv  |       |       |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+      I2      |       |   ic  |       |  psv2 |       |       |       |       |       |       |       |
+              ----------------------------------------------------------------------------------------
+       
+  49   
+      	1.AGR
+      	2.COL
+      	3.CRU
+      	4.Metal mining
+      	5.Non-metal mining
+      	6.FBT
+      	7.Textile
+      	8.Clothing
+      	9.Lumber
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      	10.Paper
+      	11.OIL
+      	12.Chemical
+      	13.Non-metal products
+      	14.Minal melting
+      	15.Minal products
+      	16.Genreal and specific equipment man.
+      	17.Transportation equipment man.
+      	18.Electrical equipment man.
+      	19.ELQ
+      	20.Instruments
+      	21.Other man.
+      	22.Waste
+      	23.ELE
+      	24.GDT
+      	25.WTR
+      	26.CON
+      	27.TRP
+      	28.OTH
+      	29.TRD   
+      	30.GAS
+  82   
+  83  *SAM table
+  84  set     oldi   SAM rows and colums indices   /
+  85          1*30    Industries,
+  86          31*60   Commodities,
+  87          61      Labor,
+  88          62      Capital,
+  89          63      Household,
+  90          64      Central Government,
+  91          65      Local Government,
+  92          66      Production tax,
+  93          67      Commodity tax,
+  94          68      Factor tax,
+  95          69      Income tax,
+  96          70      Domestic trade,
+  97          71      Foreign trade,
+  98          72      Investment,
+  99          73      Inventory/;
+ 100  set      i       SAM with trade margin/
+ 101           1*74/;
+ 102  alias (oldi,oldj);
+ 103  alias (i,j,ii);
+ 104   
+ 105  *Energy balance table
+ 106  set ebti /
+ 107           1       DX,
+ 108           2       X,
+ 109           3       DRC,
+ 110           4       RC,
+ 111           5       AGR,
+ 112           6       COAL,
+ 113           7       OIL,
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 114           8       MM,
+ 115           9       NM,
+ 116           10      FBT,
+ 117           11      TXT,
+ 118           12      CLO,
+ 119           13      LOG,
+ 120           14      PAP,
+ 121           15      ROIL,
+ 122           16      CHE,
+ 123           17      NMP,
+ 124           18      MSP,
+ 125           19      MP,
+ 126           20      GSM,
+ 127           21      TME,
+ 128           22      EME,
+ 129           23      CCE,
+ 130           24      IM,
+ 131           25      AC,
+ 132           26      WAS,
+ 133           27      ELEH,
+ 134           28      FG,
+ 135           29      WT,
+ 136           30      CON,
+ 137           31      TR,
+ 138           32      WRHR,
+ 139           33      OTH,
+ 140           34      NG,
+ 141           35      FU,
+ 142           36      INV,
+ 143           37      PROD
+ 144  /;
+ 145   
+ 146   
+ 147  set      e       energy product  /
+ 148           coal    Coal,
+ 149           fg      Fuel gas,
+ 150           oil     Crude oil,
+ 151           roil    Refined oil,
+ 152           ng      Natural gas,
+ 153           eleh    Electricity & heat,
+ 154           othe    Other energy/;
+ 155  set      r China provinces       /BEJ,TAJ,HEB,SHX,NMG,LIA,JIL,HLJ,SHH,JSU,ZHJ,ANH,FUJ,JXI,SHD,HEN,HUB,HUN,GUD,GXI,HAI,CHQ,SIC,GZH,YUN,SHA,GAN,NXA,QIH,XIN/;
+ 156  set      pmg     /1*60/;
+ 157  alias    (pmg,pmg2);
+ 158  parameter sam3(r,oldi,oldj)           SAM v3.0 ready for rebalancing
+ 159  parameter ebt2(oldi,r,ebti)           EBT v2.0 for OPT
+ 160  parameter poilng
+ 161  parameter p(i)
+ 162  parameter pricemargin(r,pmg);
+ 163   
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\/data/gdx/sam3.gdx
+--- LOAD  sam3 = 10:sam3
+--- LOAD  ebt2 = 39:ebt2
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+--- LOAD  pricemargin = 14:pricemargin
+ 168   
+ 169  parameter sam31(r,i,j)           SAM v3.1 ready for rebalancing
+ 170  parameter ebt21(i,r,ebti)           EBT v2.1 for OPT
+ 171   
+ 172  *SAM v3.1
+ 173   
+ 174  loop(r,
+ 175  loop(i$(ord(i)<=73),
+ 176  loop(j$(ord(j)<=73),
+ 177  loop(oldi$(ord(oldi)=ord(i)),
+ 178  loop(oldj$(ord(oldj)=ord(j)),
+ 179  sam31(r,i,j)=sam3(r,oldi,oldj);
+ 180  ););););
+ 181  );
+ 182  loop(r,
+ 183  loop(i$(ord(i)=74),
+ 184  loop(j,
+ 185  sam31(r,i,j)=0;
+ 186  sam31(r,j,i)=0;
+ 187  ););
+ 188  );
+ 189   
+ 190   
+ 191  *EBT v2.1
+ 192  loop(r,
+ 193  loop(ebti,
+ 194  loop(i$(ord(i)<=73),
+ 195  loop(oldi$(ord(oldi)=ord(i)),
+ 196  ebt21(i,r,ebti)=ebt2(oldi,r,ebti)/1000;
+ 197  ););););
+ 198   
+ 199   
+ 200  * Final balancing
+ 201   
+ 202  positive variables finalsam (r,i,j)
+ 203  positive variables rowsum(r,i)
+ 204  positive variables columnsum(r,i)
+ 205  positive variables vom(r,i)
+ 206  positive variables vxm(r,i)
+ 207  variable jj
+ 208   
+ 209  Equations
+ 210          rsum
+ 211          csum
+ 212          sumbalance
+ 213          vomdef
+ 214          vxmdef
+ 215          vxmltvom
+ 216  *       fixegy1
+ 217  *       fixegy2
+ 218  *       fixtrdmrgshr
+ 219          obj
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 220  ;
+ 221  vomdef(r,i)$(sameas(r,'o=listings\_balance.lst') and (ord(i) le 30))..
+ 222  vom(r,i)=e=sum(j$(ord(j)=ord(i)+30),finalsam(r,i,j));
+ 223   
+ 224  vxmdef(r,i)$(sameas(r,'o=listings\_balance.lst') and (ord(i) le 30))..
+ 225  vxm(r,i)=e=sum(j$(ord(j)=ord(i)+30),finalsam(r,j,"70"))+sum(j$(ord(j)=ord(i)+30),finalsam(r,j,"71"));
+ 226   
+ 227   
+ 228  * The share of trade margin should be fixed
+ 229  *fixtrdmrgshr(r,i)$(sameas(r,'%prov%') and (ord(i)>=31) and (ord(i)<=60) and (sam31(r,"74",i)))..
+ 230  *finalsam(r,"74",i)=e=sam31(r,"74",i)/sam31(r,"70",i)*finalsam(r,"70",i);
+ 231   
+ 232   
+ 233  * export should be smaller than production
+ 234  vxmltvom(r,i)$(sameas(r,'o=listings\_balance.lst') and (ord(i) le 30))..
+ 235  vom(r,i)=g=vxm(r,i);
+ 236   
+ 237  *rsum(r,i)..
+ 238  rsum(r,i)$(sameas(r,'o=listings\_balance.lst'))..
+ 239  sum(j,finalsam(r,i,j))=e=rowsum(r,i);
+ 240   
+ 241  *csum(r,i)..
+ 242  csum(r,i)$(sameas(r,'o=listings\_balance.lst'))..
+ 243  sum(j,finalsam(r,j,i))=e=columnsum(r,i);
+ 244   
+ 245  *sumbalance(r,i)..
+ 246  sumbalance(r,i)$(sameas(r,'o=listings\_balance.lst'))..
+ 247  rowsum(r,i)=e=columnsum(r,i);
+ 248   
+      fixegy1(r,i,j)$(sameas(r,'%prov%') and ((ord(i)=2) or (ord(i)=3) or (ord(i)=11) or (ord(i)=23) or (ord(i)=24) or (ord(i)=30)) and (ord(j)=ord(i)+30))..
+      finalsam(r,i,j)+finalsam(r,"70",j)+finalsam(r,"71",j)=g=0.8*(sam31(r,i,j)+sam31(r,"70",j)+sam31(r,"71",j));
+       
+      fixegy2(r,i,j)$(sameas(r,'%prov%') and ((ord(i)=2) or (ord(i)=3) or (ord(i)=11) or (ord(i)=23) or (ord(i)=24) or (ord(i)=30)) and (ord(j)=ord(i)+30))..
+      finalsam(r,i,j)+finalsam(r,"70",j)+finalsam(r,"71",j)=l=1.5*(sam31(r,i,j)+sam31(r,"70",j)+sam31(r,"71",j));
+ 256   
+ 257   
+ 258  obj..
+ 259  *jj=e=sum(r$(sameas(r,'%prov%')),sum(i,sum(j,sqr(finalsam(r,i,j)-sam31(r,i,j)))))+10000*sum(r$(sameas(r,'%prov%')),sum(i$((ord(i)=32) or (ord(i)=33) or (ord(i)=41) or (ord(i)=53) or (ord(i)=54) or (ord(i)=60) or (ord(i)=70) or (ord(i)=71)),sum(j$((o
+      rd(j)=2) or (ord(j)=3) or (ord(j)=11) or (ord(j)=23) or (ord(j)=24) or (ord(j)=30) or (ord(j)=70) or (ord(j)=71)),sqr(finalsam(r,i,j)-sam31(r,i,j)))));
+ 260  jj=e=sum(r$(sameas(r,'o=listings\_balance.lst')),sum(i,sum(j,sqr(finalsam(r,i,j)-sam31(r,i,j)))))
+ 261  * Energy production and trade
+ 262  +10000*(sum((r,i,j)$(sameas(r,'o=listings\_balance.lst') and ((ord(i)=2) or (ord(i)=3) or (ord(i)=11) or (ord(i)=23) or (ord(i)=24) or (ord(i)=30))
+ 263  and (ord(j)=ord(i)+30)),
+ 264  sqr(finalsam(r,i,j)-sam31(r,i,j)+finalsam(r,"70",j)-sam31(r,"70",j)+finalsam(r,j,"70")-sam31(r,j,"70")
+ 265  +sqr(finalsam(r,"71",j)-sam31(r,"71",j))+sqr(finalsam(r,j,"71")-sam31(r,j,"71")))
+ 266  ))
+ 267  * Energy input
+ 268  +10000*sum((r,i,j)$(sameas(r,'o=listings\_balance.lst') and ((ord(i)=32) or (ord(i)=33) or (ord(i)=41) or (ord(i)=53) or (ord(i)=54) or (ord(i)=60))
+ 269  and ((ord(j)=2) or (ord(j)=3) or (ord(j)=11) or (ord(j)=23) or (ord(j)=24) or (ord(j)=30))),
+ 270  sqr(finalsam(r,i,j)-sam31(r,i,j)))
+ 271  * Fix private and government consumption and investment
+ 272  +10000*sum((r,i)$(sameas(r,'o=listings\_balance.lst') and ((ord(i)>=31) and (ord(i)<=60))),
+ 273  sqr(finalsam(r,i,"63")-sam31(r,i,"63"))+sqr(finalsam(r,i,"65")-sam31(r,i,"65"))+sqr(finalsam(r,i,"72")-sam31(r,i,"72")))
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 274  * Fix HH consumption for OIL, MVH and TRP
+ 275  *+1000000*sum((r,i)$(sameas(r,'%prov%') and ((ord(i)=41) or (ord(i)=47) or (ord(i)=57))),
+ 276  *sqr(finalsam(r,i,"63")-sam31(r,i,"63")))
+ 277  ;
+ 278   
+ 279   
+ 280  Model gua /all/;
+ 281   
+ 282  *ratio of hh and gov's cons
+ 283  parameter sam31csum(r,i)
+ 284  loop(r,
+ 285  loop(i,
+ 286  sam31csum(r,i)=0;
+ 287  ););
+ 288  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 289  loop(i,
+ 290  loop(j$((ord(j)>=31) and (ord(j)<=60)),
+ 291  sam31csum(r,i)=sam31csum(r,i)+sam31(r,j,i);
+ 292  );
+ 293  );
+ 294  );
+ 295   
+ 296   
+ 297  *If quantity is not zero, value is not zero
+ 298  *Assuming trade margin is distributed equally between exporter and importer (wrong)
+ 299  *We should put all the trade margin to the importer as GTAP
+ 300   
+ 301  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 302  loop(i$((ord(i)=2) or (ord(i)=3) or (ord(i)=11) or (ord(i)=23) or (ord(i)=24) or (ord(i)=30)),
+ 303  loop(j$(ord(j)=ord(i)+30),
+ 304   
+ 305  loop(pmg$(ord(pmg)=ord(i)),
+ 306  * Margin is stored with the double index of price
+ 307  loop(pmg2$(ord(pmg2)=ord(i)*2),
+ 308   
+ 309  * No trade margin on export
+ 310  sam31(r,j,"70")=(pricemargin(r,pmg))*ebt21(i,r,"1");
+ 311  *finalsam.fx(r,j,"70")=sam31(r,j,"70");
+ 312   
+ 313  sam31(r,j,"71")=(pricemargin(r,pmg))*ebt21(i,r,"2");
+ 314  finalsam.fx(r,j,"71")=sam31(r,j,"71");
+ 315   
+ 316  * No margin here in domestic import
+ 317  sam31(r,"70",j)=pricemargin(r,pmg)*ebt21(i,r,"3");
+ 318  sam31(r,"74",i)=2*pricemargin(r,pmg2)*ebt21(i,r,"3");
+ 319  *finalsam.fx(r,"70",j)=sam31(r,"70",j);
+ 320   
+ 321  sam31(r,"71",j)=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"4");
+ 322  finalsam.fx(r,"71",j)=sam31(r,"71",j);
+ 323   
+ 324  if((sam31(r,j,"63")+sam31(r,j,"65"))>0,
+ 325  sam31(r,j,"63")=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"35")/(sam31(r,j,"63")+sam31(r,j,"65"))*sam31(r,j,"63");
+ 326  sam31(r,j,"65")=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"35")-sam31(r,j,"63");
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 327  else
+ 328  sam31(r,j,"63")=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"35")/(sam31csum(r,"63")+sam31csum(r,"65"))*sam31csum(r,"63");
+ 329  sam31(r,j,"65")=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"35")/(sam31csum(r,"63")+sam31csum(r,"65"))*sam31csum(r,"65");
+ 330  );
+ 331   
+ 332  *inventory
+ 333  sam31(r,j,"73")=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"36");
+ 334   
+ 335  *production
+ 336  sam31(r,i,j)=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,"37");
+ 337  * finalsam.fx(r,i,j)=sam31(r,i,j);
+ 338   
+ 339  *intermediate use
+ 340  loop(ebti$((ord(ebti)>=5) and (ord(ebti)<=34)),
+ 341  loop(ii$(ord(ii)=ord(ebti)-4),
+ 342  sam31(r,j,ii)=(pricemargin(r,pmg)+2*pricemargin(r,pmg2))*ebt21(i,r,ebti);
+ 343  finalsam.fx(r,j,ii)=sam31(r,j,ii);
+ 344  );
+ 345  );
+ 346  ););
+ 347   
+ 348  *end of j
+ 349  );
+ 350   
+ 351  *finalsam.fx(r,"74",i)=sam31(r,"74",i);
+ 352   
+ 353  *Balance trade margin
+ 354  sam31(r,"57","74")=sam31(r,"57","74")+sam31(r,"74",i);
+ 355  *end of i
+ 356  );
+ 357   
+ 358  *finalsam.fx(r,"57","74")= sam31(r,"57","74");
+ 359  *Adjust transportation production
+ 360  sam31(r,"27","57")=sam31(r,"27","57")+sam31(r,"57","74");
+ 361   
+ 362  );
+ 363   
+ 364   
+ 365   
+ 366  * Adjust labor and capital in electricity input to meet the nuc, hyd and wind share in benchmark
+ 367  set nhw /nuc,hyd,wind/;
+ 368  parameter shrnhw(r,*,nhw);
+ 369  table shrnhw_(r,nhw)
+ 370          hyd             nuc             wind
+ 371  ANH     0.0230
+ 372  BEJ     0.0176
+ 373  CHQ     0.2104
+ 374  FUJ     0.3003                          0.0038
+ 375  GAN     0.3048                          0.0050
+ 376  GUD     0.0861          0.1121          0.0014
+ 377  GXI     0.4730
+ 378  GZH     0.2592
+ 379  HAI     0.1053                          0.0008
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 380  HEB     0.0077                          0.0043
+ 381  HEN     0.0488
+ 382  HLJ     0.0117                          0.0052
+ 383  HUB     0.6055
+ 384  HUN     0.3513
+ 385  JIL     0.1118                          0.0128
+ 386  JSU     0.0011          0.0354          0.0007
+ 387  JXI     0.1478
+ 388  LIA     0.0091                          0.0030
+ 389  NMG     0.0077                          0.0079
+ 390  NXA     0.0375                          0.0011
+ 391  QIH     0.6788
+ 392  SHA     0.0806
+ 393  SHD     0.0008                          0.0010
+ 394  SHH                                     0.0005
+ 395  SHX     0.0148
+ 396  SIC     0.6321
+ 397  TAJ     0.0003
+ 398  XIN     0.1667                          0.0119
+ 399  YUN     0.4762
+ 400  ZHJ     0.0625          0.1091          0.0002
+ 401  ;
+ 402   
+ 403  shrnhw(r,"output",nhw)=shrnhw_(r,nhw);
+ 404  *Input share of hyd
+ 405  shrnhw(r,"cap","hyd")=0.55;
+ 406  shrnhw(r,"lab","hyd")=0.1;
+ 407  shrnhw(r,"res","hyd")=0.3;
+ 408  shrnhw(r,"COL","hyd")=0.02;
+ 409  shrnhw(r,"OTH","hyd")=0.03;
+ 410   
+ 411   
+ 412  *Input share of nuc
+ 413   
+ 414  shrnhw(r,"cap","nuc")=0.55;
+ 415  shrnhw(r,"lab","nuc")=0.25;
+ 416  shrnhw(r,"res","nuc")=0.15;
+ 417   
+ 418  shrnhw(r,"COL","nuc")=0.02;
+ 419  shrnhw(r,"OTH","nuc")=0.03;
+ 420   
+ 421   
+ 422  *Input share of wind
+ 423  shrnhw(r,"cap","wind")=0.6;
+ 424  shrnhw(r,"lab","wind")=0.1;
+ 425  shrnhw(r,"res","wind")=0.3;
+ 426   
+ 427   
+ 428   
+ 429  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 430  *Labor
+ 431  sam31(r,"61","23")=sum(nhw,sam31(r,"23","53")*shrnhw(r,"output",nhw)*shrnhw(r,"lab",nhw))
+ 432  +sam31(r,"61","23")*(1-sum(nhw,shrnhw(r,"output",nhw)));
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 14:32:42 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 433  *Capital
+ 434  sam31(r,"62","23")=sum(nhw,sam31(r,"23","53")*shrnhw(r,"output",nhw)*(shrnhw(r,"cap",nhw)
+ 435  +shrnhw(r,"res",nhw)))+sam31(r,"62","23")*(1-sum(nhw,shrnhw(r,"output",nhw)));
+ 436  *Coal
+ 437  *sam31(r,"32","23")=sum(nhw,sam31(r,"23","53")*shrnhw(r,"output",nhw)*shrnhw(r,"col",nhw))
+ 438  *+sam31(r,"32","23")*(1-sum(nhw,shrnhw(r,"output",nhw)));
+ 439  *Other
+ 440  *sam31(r,"59","23")=sum(nhw,sam31(r,"23","53")*shrnhw(r,"output",nhw)*shrnhw(r,"oth",nhw))
+ 441  *+sam31(r,"59","23")*(1-sum(nhw,shrnhw(r,"output",nhw)));
+ 442  );
+ 443   
+ 444   
+ 445   
+ 446   
+ 447  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 448  loop(i,
+ 449  loop(j,
+ 450  finalsam.l(r,i,j)=sam31(r,i,j);
+ 451  );););
+ 452   
+ 453  *Define sparcity
+ 454  set nonzero(r,i,j)
+ 455  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 456   
+ 457  loop(i$(ord(i) le 30),
+ 458  loop(j$((ord(j)=ord(i)+30)),
+ 459  nonzero(r,i,j)=yes;
+ 460  ););
+ 461  loop(i$(ord(i) le 30),
+ 462  loop(j$((ord(j)=66)),
+ 463  if((finalsam.l(r,i,j)>0),nonzero(r,i,j)=yes;);
+ 464  ););
+ 465  loop(i$((ord(i) ge 31) and (ord(i) le 60)),
+ 466  loop(j$(((ord(j) ge 1) and (ord(j) le 30)) or (ord(j)=63) or (ord(j)=65) or (ord(j)=70) or (ord(j)=71) or (ord(j)=72) or (ord(j)=73)),
+ 467  nonzero(r,i,j)=yes;
+ 468  ););
+ 469  nonzero(r,"57","74")=yes;
+ 470  loop(i$((ord(i) ge 61) and (ord(i) le 62)),
+ 471  loop(j$((ord(j) ge 1) and (ord(j) le 30)),
+ 472  nonzero(r,i,j)=yes;
+ 473  ););
+ 474  loop(i$(ord(i)=63),
+ 475  loop(j$((ord(j)=61) or (ord(j)=65) or (ord(j)=70) or (ord(j)=71) or (ord(j)=62)),
+ 476  nonzero(r,i,j)=yes;
+ 477  ););
+ 478  loop(i$(ord(i)=64),
+ 479  loop(j$((ord(j)=65) or (ord(j)=72)),
+ 480  nonzero(r,i,j)=yes;
+ 481  ););
+ 482  loop(i$(ord(i)=65),
+ 483  loop(j$((ord(j)=64) or (ord(j)=66)),
+ 484  nonzero(r,i,j)=yes;
+ 485  ););
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 486  loop(i$(ord(i)=66),
+ 487  loop(j$((ord(j) ge 1) and (ord(j) le 30)),
+ 488  if((finalsam.l(r,i,j)>0),nonzero(r,i,j)=yes;);
+ 489  ););
+ 490  loop(i$(((ord(i) ge 70) and (ord(i) le 71)) or (ord(i)=73)),
+ 491  loop(j$(((ord(j) ge 31) and (ord(j) le 60)) or (ord(j)=63)),
+ 492  nonzero(r,i,j)=yes;
+ 493  ););
+ 494  loop(i$(ord(i)=72),
+ 495  loop(j$((ord(j)=62) or (ord(j)=63) or (ord(j)=64)),
+ 496  nonzero(r,i,j)=yes;
+ 497  ););
+ 498  loop(i$(ord(i)=74),
+ 499  loop(j$(ord(j)=32),
+ 500  nonzero(r,i,j)=yes;
+ 501  ););
+ 502   
+ 503  );
+ 504   
+ 505   
+ 506   
+ 507   
+ 508   
+ 509  *Fix sparcity
+ 510  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 511  finalsam.fx(r,i,j)$(not nonzero(r,i,j))=0;
+ 512   
+ 513   
+ 514  * Fix cap and lab in ele
+ 515  finalsam.fx(r,"61","23")=sam31(r,"61","23");
+ 516  finalsam.fx(r,"62","23")=sam31(r,"62","23");
+ 517   
+ 518  );
+ 519   
+ 520   
+ 521  gua.iterlim=100000;
+ 522  Solve gua minimizing jj using nlp;
+ 523  display finalsam.l;
+ 524   
+ 525   
+ 526  parameter egychange;
+ 527  loop(r$(sameas(r,'o=listings\_balance.lst')),
+ 528  loop(i$((ord(i)=2) or (ord(i)=3) or (ord(i)=11) or (ord(i)=23) or (ord(i)=24) or (ord(i)=30)),
+ 529  loop(j$(ord(j)=ord(i)+30),
+ 530  loop(ii$(ord(ii)<31),
+ 531   
+ 532  egychange(r,j,ii)=sam31(r,j,ii)-finalsam.l(r,j,ii);
+ 533   
+ 534  );
+ 535  );
+ 536  ););
+ 537   
+ 538  display egychange;
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 11
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 539  *$exit
+ 540   
+ 541  *chksam
+ 542  set     negval4(i,j)     Flag for negative elements;
+ 543  set     empty4(i,*)      Flag for empty rows and columns;
+ 544  parameter       chksam4(i,*)       Consistency check of social accounts;
+ 545  parameter totoutput2;
+ 546  totoutput2=0;
+ 547  loop(r$(sameas('o=listings\_balance.lst',r)),
+ 548  loop(i$((ord(i)>=31) and (ord(i)<=60)),
+ 549  totoutput2=totoutput2+sum(j,finalsam.l(r,i,j));
+ 550  );
+ 551  );
+ 552  loop(r$(sameas('o=listings\_balance.lst',r)),
+ 553  negval4(i,j) = yes$(finalsam.l(r,i,j) < 0);
+ 554  empty4(i,"row") = 1$(sum(j, finalsam.l(r,i,j)) = 0);
+ 555  empty4(j,"col") = 1$(sum(i, finalsam.l(r,i,j)) = 0);
+ 556  chksam4(i,"before") = sum(j, finalsam.l(r,i,j)-finalsam.l(r,j,i));
+ 557  chksam4(i,"scale") = sum(j, finalsam.l(r,j,i));
+ 558  chksam4(i,"%dev")$sum(j, finalsam.l(r,i,j)) = 100 * sum(j, finalsam.l(r,i,j)-finalsam.l(r,j,i)) / sum(j, finalsam.l(r,i,j));
+ 559  );
+ 560  parameter sam4(i,j);
+ 561  loop(r$(sameas('o=listings\_balance.lst',r)),
+ 562  loop(i,
+ 563  loop(j,
+ 564  sam4(i,j)= finalsam.l(r,i,j);
+ 565  );
+ 566  );
+ 567  );
+ 568   
+ 569  *Energy related data
+ 570  parameter egyvalue2(i,r,ebti);
+ 571  loop(r,
+ 572  loop(i$((ord(i)=2) or (ord(i)=3) or (ord(i)=11) or (ord(i)=23) or (ord(i)=24) or (ord(i)=30)),
+ 573  loop(j$(ord(j)=ord(i)+30),
+ 574  egyvalue2(i,r,"1")=sam4(j,"70");
+ 575  egyvalue2(i,r,"2")=sam4(j,"71");
+ 576  egyvalue2(i,r,"3")=sam4("70",j);
+ 577  egyvalue2(i,r,"4")=sam4("71",j);
+ 578  loop(ebti$((ord(ebti)>=5) and (ord(ebti)<=34)),
+ 579  loop(ii$(ord(ii)=ord(ebti)-4),
+ 580  egyvalue2(i,r,ebti)=sam4(j,ii);
+ 581  );
+ 582  );
+ 583  egyvalue2(i,r,"35")=sam4(j,"63")+sam4(j,"65");
+ 584  egyvalue2(i,r,"36")=sam4(j,"73");
+ 585  egyvalue2(i,r,"37")=sam4(i,j);
+ 586  );););
+ 587  display egyvalue2;
+ 588   
+ 589   
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 12
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\finalbalancing2.gms
+     2      164 GDXIN          1     164  C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\/data/gdx/sam3.gdx
+
+
+COMPILATION TIME     =        0.015 SECONDS      4 Mb  WEX238-238 Apr  3, 2012
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 13
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE gua Using NLP From line 522
+
+
+---- rsum  =E=  
+
+                NONE
+
+
+---- csum  =E=  
+
+                NONE
+
+
+---- sumbalance  =E=  
+
+                NONE
+
+
+---- vomdef  =E=  
+
+                NONE
+
+
+---- vxmdef  =E=  
+
+                NONE
+
+
+---- vxmltvom  =G=  
+
+                NONE
+
+
+---- obj  =E=  
+
+obj..  jj =E= 0 ; (LHS = 0)
+     
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 14
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE gua Using NLP From line 522
+
+
+---- jj  
+
+jj
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj
+
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 15
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE gua Using NLP From line 522
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           7     SINGLE EQUATIONS            1
+BLOCKS OF VARIABLES           1     SINGLE VARIABLES            1
+NON ZERO ELEMENTS             1     NON LINEAR N-Z              0
+DERIVATIVE POOL              10     CONSTANT POOL              16
+CODE LENGTH                   0
+
+
+GENERATION TIME      =        0.000 SECONDS      5 Mb  WEX238-238 Apr  3, 2012
+
+
+EXECUTION TIME       =        1.888 SECONDS      5 Mb  WEX238-238 Apr  3, 2012
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 16
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE gua Using NLP From line 522
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   gua                 OBJECTIVE  jj
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  CONOPT              FROM LINE  522
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.000      1000.000
+ ITERATION COUNT, LIMIT         4        100000
+ EVALUATION ERRORS              0             0
+CONOPT 3         Mar 17, 2012 23.8.2 WEX 31442.32372 WEI x86_64/MS Windows    
+ 
+ 
+    C O N O P T 3   version 3.15D
+    Copyright (C)   ARKI Consulting and Development A/S
+                    Bagsvaerdvej 246 A
+                    DK-2880 Bagsvaerd, Denmark
+ 
+ 
+ ** Optimal solution. There are no superbasic variables.
+ 
+ 
+ CONOPT time Total                            0.008 seconds
+   of which: Function evaluations             0.000 =  0.0%
+             1st Derivative evaluations       0.000 =  0.0%
+ 
+
+---- EQU rsum  
+
+                NONE
+
+
+---- EQU csum  
+
+                NONE
+
+
+---- EQU sumbalance  
+
+                NONE
+
+
+---- EQU vomdef  
+
+                NONE
+
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 17
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE gua Using NLP From line 522
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU obj                 .              .              .             1.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR jj                -INF             .            +INF             .          
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                        09/11/13 14:32:42 Page 18
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    523 VARIABLE finalsam.L  
+
+                      ( ALL       0.000 )
+
+
+----    538 PARAMETER egychange  
+
+                      ( ALL       0.000 )
+
+
+----    587 PARAMETER egyvalue2  
+
+                      ( ALL       0.000 )
+
+
+
+EXECUTION TIME       =        0.047 SECONDS      4 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\finalbalancing2.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\finalbalancing2.lst

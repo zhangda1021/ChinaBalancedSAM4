@@ -1,0 +1,41 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/13/13 20:38:23 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   5   
+  14   
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/13/13 20:38:23 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readegydata.gms
+     2        6 CALL           1       6  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_ind.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\IND.gdx par=ind rng="IND!A1:G25" rdim=1 cdim=1
+     3        7 CALL           1       7  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_ind.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\PROV.gdx par=indprov rng="INDPROV!A1:H31" rdim=1 cdim=1
+     4        8 CALL           1       8  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_prov.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\COAL.gdx par=egyprov  rng="COAL!A1:u31" rdim=1 cdim=1
+     5        9 CALL           1       9  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_prov.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\OIL.gdx par=egyprov  rng="OIL!A1:u31" rdim=1 cdim=1
+     6       10 CALL           1      10  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_prov.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\ROIL.gdx par=egyprov  rng="ROIL!A1:u31" rdim=1 cdim=1
+     7       11 CALL           1      11  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_prov.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\NG.gdx par=egyprov  rng="NG!A1:u31" rdim=1 cdim=1
+     8       12 CALL           1      12  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_prov.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\ELEH.gdx par=egyprov rng="ELEH!A1:u31" rdim=1 cdim=1
+     9       13 CALL           1      13  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\egycons_prov.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawegy\OTHE.gdx par=egyprov  rng="OTHE!A1:u31" rdim=1 cdim=1
+
+
+COMPILATION TIME     =        8.549 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+EXECUTION TIME       =        0.000 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readegydata.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\listings\readegydata.lst

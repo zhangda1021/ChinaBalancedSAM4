@@ -1,0 +1,119 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 00:03:58 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      This program is used to get the ratio of crude oil ang gas consumption for each province.
+       
+   5   
+   8   
+   9  set     i       accounts /
+  10           PROD    Production,
+  11           DX      Domestic outflow,
+  12           X       Export,
+  13           DRC     Domestic inflow,
+  14           RC      Import,
+  15           COALT   Coal converted from other energy product,
+  16           FGT     Fuel gas converted from other energy product,
+  17           OILT    Crude oil converted from other energy product,
+  18           ROILT   Refined oil converted from other energy product,
+  19           NGT     Natural gas converted from other energy productconverted from other energy product,
+  20           ELEHT   Electricity & heat converted from other energy product,
+  21           OTHET   Other energy converted from other energy product,
+  22           AGR     Agriculture,
+  23           IND     Industry,
+  24           CON     Construction,
+  25           TR      Transportation,
+  26           WRHR    Wholesale & retail & hotel & restraurant,
+  27           OTH     Other service industry,
+  28           FU      Final use,
+  29           INV     Inventory change/;
+  30  set      r China provinces       /BEJ,TAJ,HEB,SHX,NMG,LIA,JIL,HLJ,SHH,JSU,ZHJ,ANH,FUJ,JXI,SHD,HEN,HUB,HUN,GUD,GXI,HAI,CHQ,SIC,GZH,YUN,SHA,GAN,NXA,QIH,XIN/;
+  31  parameter egyadjusted(r,i)                egy cons of egy product by province
+  32   
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\data\gdx\egygdx\balance\oil_balance.gdx
+--- LOAD  egyadjusted = 40:egyadjusted
+  35  parameter oil(r)
+  36  loop(r,
+  37  oil(r)=0;
+  38  );
+  39  loop(r,
+  40  loop(i$((sameas(i,'PROD')) OR (sameas(i,'DRC')) OR (sameas(i,'RC'))),
+  41  oil(r)=oil(r)+egyadjusted(r,i);
+  42  );
+  43  loop(i$((sameas(i,'DX')) OR (sameas(i,'X'))),
+  44  oil(r)=oil(r)-egyadjusted(r,i);
+  45  );
+  46  );
+  47  display oil
+  48   
+  49   
+  50  variables x(r,i)
+GDXIN   C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\data\gdx\egygdx\balance\ng_balance.gdx
+--- LOAD  x = 20:x
+  53  parameter ng(r)
+  54  loop(r,
+  55  ng(r)=0;
+  56  );
+  57  loop(r,
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 00:03:58 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  58  loop(i$((sameas(i,'PROD')) OR (sameas(i,'DRC')) OR (sameas(i,'RC'))),
+  59  ng(r)=ng(r)+x.l(r,i);
+  60  );
+  61  loop(i$((sameas(i,'DX')) OR (sameas(i,'X'))),
+  62  ng(r)=ng(r)-x.l(r,i);
+  63  );
+  64  );
+  65  display ng
+  66   
+  67  parameter oilngratio(r)
+  68  loop(r,
+  69  oilngratio(r)=oil(r)/(oil(r)+ng(r));
+  70  );
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 00:03:58 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\oilgasratio.gms
+     2       33 GDXIN          1      33  C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\data\gdx\egygdx\balance\oil_balance.gdx
+     3       51 GDXIN          1      51  C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\data\gdx\egygdx\balance\ng_balance.gdx
+
+
+COMPILATION TIME     =        0.015 SECONDS      3 Mb  WEX238-238 Apr  3, 2012
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/11/13 00:03:58 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     47 PARAMETER oil  
+
+BEJ 1380.876,    TAJ 1306.536,    HEB 1628.514,    NMG  215.708,    LIA 6081.561,    JIL 1343.478,    HLJ 2233.332,    SHH 3056.913,    JSU 4041.735,    ZHJ 4001.542,    ANH  643.246,    FUJ  506.977,    JXI  569.396,    SHD 5386.582,    HEN 1034.179
+HUB 1219.749,    HUN  948.774,    GUD 4563.365,    GXI  224.086,    HAI 1268.305,    CHQ    0.271,    SIC  342.550,    YUN    0.229,    SHA 2266.339,    GAN 1857.601,    NXA  226.594,    QIH  168.622,    XIN 2397.458
+
+
+----     65 PARAMETER ng  
+
+BEJ  504.389,    TAJ  180.813,    HEB  161.966,    SHX   91.598,    NMG  352.714,    LIA  189.435,    JIL   86.450,    HLJ  403.377,    SHH  375.701,    JSU  606.640,    ZHJ  218.614,    ANH   53.566,    FUJ    6.390,    JXI   13.752,    SHD  313.076
+HEN  447.954,    HUB  115.307,    HUN   76.852,    GUD  609.048,    GXI   17.894,    HAI  322.711,    CHQ  558.698,    SIC 1403.891,    GZH   69.004,    YUN   73.686,    SHA  501.838,    GAN  175.133,    NXA  121.108,    QIH  248.780,    XIN  932.659
+
+
+
+EXECUTION TIME       =        0.000 SECONDS      4 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\oilgasratio.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM3\listings\oilgasratio.lst

@@ -1,0 +1,31 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/14/13 00:05:27 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readegybench.gms
+     2        4 CALL           1       4  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\coal_bench.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\egybench\coal.gdx par=egybench  rng="sheet1!a1:b20" rdim=1 cdim=1
+     3        5 CALL           1       5  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\oil_bench.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\egybench\oil.gdx par=egybench  rng="sheet1!A1:b20" rdim=1 cdim=1
+     4        6 CALL           1       6  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\roil_bench.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\egybench\roil.gdx par=egybench  rng="sheet1!A1:b20" rdim=1 cdim=1
+     5        7 CALL           1       7  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\ng_bench.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\egybench\ng.gdx par=egybench  rng="sheet1!A1:b20" rdim=1 cdim=1
+     6        8 CALL           1       8  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\eleh_bench.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\egybench\eleh.gdx par=egybench  rng="sheet1!A1:b20" rdim=1 cdim=1
+     7        9 CALL           1       9  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\othe_bench.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\egybench\othe.gdx par=egybench  rng="sheet1!A1:b20" rdim=1 cdim=1
+
+
+COMPILATION TIME     =        6.240 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+EXECUTION TIME       =        0.000 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readegybench.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\listings\readegybench.lst

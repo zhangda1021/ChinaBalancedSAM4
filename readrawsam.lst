@@ -1,0 +1,92 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/12/13 20:31:05 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   4   
+   6   
+   8   
+  10   
+  12   
+  14   
+  16   
+  18   
+  20   
+  22   
+  24   
+  26   
+  28   
+  30   
+  32   
+  34   
+  36   
+  38   
+  40   
+  42   
+  44   
+  46   
+  48   
+  50   
+  52   
+  54   
+  56   
+  58   
+  60   
+  62   
+  64   
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/12/13 20:31:05 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readrawsam.gms
+     2        5 CALL           1       5  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\AH.gdx par=rawsam rng="ANH!C8:BI57" rdim=1 cdim=1
+     3        7 CALL           1       7  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\BJ.gdx par=rawsam rng="BEJ!C8:BI57" rdim=1 cdim=1
+     4        9 CALL           1       9  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\CQ.gdx par=rawsam rng="CHQ!C8:BI57" rdim=1 cdim=1
+     5       11 CALL           1      11  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\FJ.gdx par=rawsam rng="FUJ!C8:BI57" rdim=1 cdim=1
+     6       13 CALL           1      13  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\GD.gdx par=rawsam rng="GUD!C8:BI57" rdim=1 cdim=1
+     7       15 CALL           1      15  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\GS.gdx par=rawsam rng="GAN!C8:BI57" rdim=1 cdim=1
+     8       17 CALL           1      17  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\GX.gdx par=rawsam rng="GXI!C8:BI57" rdim=1 cdim=1
+     9       19 CALL           1      19  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\GZ.gdx par=rawsam rng="GZH!C8:BI57" rdim=1 cdim=1
+    10       21 CALL           1      21  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\HA.gdx par=rawsam rng="HEN!C8:BI57" rdim=1 cdim=1
+    11       23 CALL           1      23  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\HB.gdx par=rawsam rng="HUB!C8:BI57" rdim=1 cdim=1
+    12       25 CALL           1      25  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\HE.gdx par=rawsam rng="HEB!C8:BI57" rdim=1 cdim=1
+    13       27 CALL           1      27  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\HI.gdx par=rawsam rng="HAI!C5:BI54" rdim=1 cdim=1
+    14       29 CALL           1      29  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\HL.gdx par=rawsam rng="HLJ!C8:BI57" rdim=1 cdim=1
+    15       31 CALL           1      31  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\HN.gdx par=rawsam rng="HUN!C8:BI57" rdim=1 cdim=1
+    16       33 CALL           1      33  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\JL.gdx par=rawsam rng="JIL!C8:BI57" rdim=1 cdim=1
+    17       35 CALL           1      35  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\JS.gdx par=rawsam rng="JSU!C8:BI57" rdim=1 cdim=1
+    18       37 CALL           1      37  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\JX.gdx par=rawsam rng="JXI!C8:BI57" rdim=1 cdim=1
+    19       39 CALL           1      39  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\LN.gdx par=rawsam rng="LIA!C8:BI57" rdim=1 cdim=1
+    20       41 CALL           1      41  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\NM.gdx par=rawsam rng="NMG!C8:BI57" rdim=1 cdim=1
+    21       43 CALL           1      43  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\NX.gdx par=rawsam rng="NXA!C8:BI57" rdim=1 cdim=1
+    22       45 CALL           1      45  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\QH.gdx par=rawsam rng="QIH!C8:BI57" rdim=1 cdim=1
+    23       47 CALL           1      47  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\SC.gdx par=rawsam rng="SIC!C8:BI57" rdim=1 cdim=1
+    24       49 CALL           1      49  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\SD.gdx par=rawsam rng="SHD!C8:BI57" rdim=1 cdim=1
+    25       51 CALL           1      51  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\SH.gdx par=rawsam rng="SHH!C8:BI57" rdim=1 cdim=1
+    26       53 CALL           1      53  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\SN.gdx par=rawsam rng="SHA!C8:BI57" rdim=1 cdim=1
+    27       55 CALL           1      55  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\SX.gdx par=rawsam rng="SHX!C8:BI57" rdim=1 cdim=1
+    28       57 CALL           1      57  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\TJ.gdx par=rawsam rng="TAJ!C8:BI57" rdim=1 cdim=1
+    29       59 CALL           1      59  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\XJ.gdx par=rawsam rng="XIN!C8:BI57" rdim=1 cdim=1
+    30       61 CALL           1      61  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\YN.gdx par=rawsam rng="YUN!C8:BI57" rdim=1 cdim=1
+    31       63 CALL           1      63  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\\chinaIO.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\ZJ.gdx par=rawsam rng="ZHJ!C8:BI57" rdim=1 cdim=1
+    32       65 CALL           1      65  gdxmerge i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\*.gdx o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\rawsam\merged.gdx
+
+
+COMPILATION TIME     =       32.869 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+EXECUTION TIME       =        0.000 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readrawsam.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readrawsam.lst

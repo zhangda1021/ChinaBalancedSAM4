@@ -1,0 +1,32 @@
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   4   
+GAMS Rev 238  WEX-WEI 23.8.2 x86_64/MS Windows                                                                                                                                                                                         09/16/13 22:48:26 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readpricemargin.gms
+     2        5 CALL           1       5  gdxxrw i=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\energydata\\pricemargin.xls o=C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\\data\gdx\pricemargin.gdx par=pricemargin rng="sheet1!A1:K31" rdim=1 cdim=1
+
+
+COMPILATION TIME     =        0.998 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+EXECUTION TIME       =        0.000 SECONDS      2 Mb  WEX238-238 Apr  3, 2012
+
+
+USER: Joint Prog. On the Sci. & Policy of Glob. Chng.G110324:1716AP-GEN
+      Massachusetts Institute of Technology                        DC11
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\readpricemargin.gms
+Output     C:\Users\zhangda\Dropbox\ChinaBalancedSAM4\listings\readpricemargin.lst

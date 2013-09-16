@@ -1,0 +1,129 @@
+=CCONOPT 3         Mar 17, 2012 23.8.2 WEX 31442.32372 WEI x86_64/MS Windows    
+=0CONOPT 3         Mar 17, 2012 23.8.2 WEX 31442.32372 WEI x86_64/MS Windows    
+=1
+ 
+ 
+    C O N O P T 3   version 3.15D
+    Copyright (C)   ARKI Consulting and Development A/S
+                    Bagsvaerdvej 246 A
+                    DK-2880 Bagsvaerd, Denmark
+ 
+=2
+    1  INPUT                                                                  (DEFAULT)
+    2  BRANCH * MAJERR MINERR JACERR                                          (DEFAULT)
+    3  OPTIMIZE                                                               (DEFAULT)
+    4  BRANCH * * * * * * MAJERR                                              (DEFAULT)
+    5  OUTPUT                                                                 (DEFAULT)
+    6  EXIT                                                                   (DEFAULT)
+    7  MAJERR MESSAGE MAJOR ERROR - TERMINATE                                 (DEFAULT)
+    8  EXIT                                                                   (DEFAULT)
+    9  MINERR MESSAGE MINOR ERROR - TERMINATE                                 (DEFAULT)
+   10  EXIT                                                                   (DEFAULT)
+   11  JACERR MESSAGE FUNCTION OR DERIVATIVE ERROR                            (DEFAULT)
+   12  OUTPUT                                                                 (DEFAULT)
+   13  EXIT                                                                   (DEFAULT)
+ 
+  ***  Line    1  INPUT
+ 
+  ***  Line    0  SET       LFEERR   =           0
+ 
+  ***  Line    0  SET       LFITER   =        1000
+ 
+  ***  Line    0  SET       RVTIME   =      1000.000000
+=1
+ 
+    The model has 2881 variables and 205 constraints
+    with 5448 Jacobian elements, 1667 of which are nonlinear.
+    The Hessian of the Lagrangian has 1667 elements on the diagonal,
+    18615 elements below the diagonal, and 1667 nonlinear variables.
+=2
+ 
+  ***  Line    2  BRANCH with Lbranch =  1
+ 
+  ***  Line    3  OPTIMIZE
+ 
+Search for a first feasible solution
+ 
+ 
+   Iter Phase Ninf   Infeasibility   RGmax    NSB   Step InItr MX OK
+      0   0        1.3316116393E+05 (Input point)
+                                Pre-triangular equations:        8
+                                Post-triangular equations:      32
+      1   0        1.3150079293E+05 (After pre-processing)
+      2   0        3.3689062180E+01 (After scaling)
+      3   0     0  3.3686634505E+01               7.2E-05      T  T
+      4   0     0  3.2231908721E+01               4.3E-02      T  T
+      5   0     0  2.9925859582E+01               7.2E-02      T  T
+      6   0     0  2.8555232226E+01               4.6E-02      T  T
+      7   0     0  2.8182321876E+01               1.3E-02      T  T
+      8   0     0  2.6806426795E+01               4.9E-02      T  T
+      9   0     0  2.3654625463E+01               1.2E-01      T  T
+     10   0     0  2.2423877866E+01               5.2E-02      T  T
+     11   0     0  2.1744279994E+01               3.0E-02      T  T
+     12   0     0  2.1672970419E+01               3.3E-03      T  T
+     13   0     0  2.1369268409E+01               1.4E-02      T  T
+     14   0     0  1.9342179949E+01               9.5E-02      T  T
+     15   0     0  1.8551184556E+01               4.1E-02      T  T
+     16   0     0  1.8295633376E+01               1.4E-02      T  T
+     17   0     0  1.8268415988E+01               1.5E-03      T  T
+     18   0     0  1.7159579123E+01               6.1E-02      T  T
+     19   0     0  1.6473494509E+01               4.0E-02      T  T
+ 
+   Iter Phase Ninf   Infeasibility   RGmax    NSB   Step InItr MX OK
+     20   0     0  1.5049686911E+01               8.6E-02      T  T
+     21   0     0  1.4260819218E+01               5.2E-02      T  T
+     22   0     0  1.3093103006E+01               8.2E-02      T  T
+     23   0     0  1.2156874659E+01               7.2E-02      T  T
+     24   0     0  1.1510416807E+01               5.3E-02      T  T
+     25   0     0  1.0623532683E+01               7.7E-02      T  T
+     26   0     0  1.0307502149E+01               3.0E-02      T  T
+     27   0     0  8.4022047900E+00               1.8E-01      T  T
+     28   0     0  7.4516463458E+00               1.1E-01      T  T
+     29   0     0  7.1719419031E+00               3.8E-02      T  T
+     30   0     0  6.7452395186E+00               5.9E-02      T  T
+     31   0     0  6.2130118394E+00               7.9E-02      T  T
+     32   0     0  4.4192621211E+00               2.9E-01      T  T
+     33   0     0  4.3392161877E+00               1.8E-02      T  T
+     34   0     0  4.3060788127E+00               7.6E-03      T  T
+     35   0     0  4.1965442041E+00               2.5E-02      T  T
+     36   0     0  3.7498558396E+00               1.1E-01      T  T
+     37   0     0  2.5386980029E+00               3.2E-01      T  T
+     38   0     0  2.3630448970E+00               6.9E-02      T  T
+     39   0     0  2.2275269514E+00               5.7E-02      T  T
+ 
+   Iter Phase Ninf   Infeasibility   RGmax    NSB   Step InItr MX OK
+     40   0     0  2.1364386268E+00               4.1E-02      T  T
+     41   0     0  6.4726393782E-01               7.0E-01      T  T
+     42   0     0  4.8885659412E-01               2.4E-01      T  T
+     43   0     0  1.4343574614E-14               1.0E+00      F  T
+ 
+ ** Feasible solution. Value of objective =    156919335.079
+ 
+Search for an optimal solution.
+ 
+ 
+   Iter Phase Ninf     Objective     RGmax    NSB   Step InItr MX OK
+     44   3        1.3494543834E+07 7.9E+06   858 1.0E+00    1 T  T
+     45   3        3.3952158418E+04 1.6E+07   858 1.0E+00    4 T  T
+     46   3        1.1531481993E+03 4.6E+04   860 6.5E-01   14 F  T
+     47   3        6.9318844808E+02 1.7E+03   874 1.6E-01    6 F  T
+     48   3        6.3452780352E+02 1.0E+03   875 4.7E-05      T  T
+     49   3        5.0090425446E+02 7.6E+02   874 6.2E-04      T  T
+     50   3        4.3911345379E+02 1.6E+02   873 1.7E-03      F  T
+     51   3        4.0104857758E+02 1.6E+02   873 1.5E-03      F  T
+     52   4        3.7642836430E+02 8.7E+01   873 1.9E-03      F  T
+     53   4        2.5281522333E+02 1.0E+02   873 6.2E-01   16 F  T
+     54   4        2.2014149237E+02 4.7E+01   872 1.0E+00    5 F  T
+     55   4        2.0584504882E+02 1.3E+01   872 5.7E-01   14 F  T
+     56   4        1.9848544590E+02 6.5E+00   871 1.0E+00   14 T  T
+     57   4        1.9801233905E+02 3.3E+00   870 1.1E-01   10 F  T
+     58   4        1.9481418410E+02 3.5E+00   860 1.0E+00   15 T  T
+     59   4        1.9316547925E+02 1.4E+00   859 5.7E-01   10 F  T
+     60   4        1.9189049325E+02 2.8E+00   849 1.0E+00   20 F  T
+     61   4        1.9105115879E+02 1.0E+00   849 1.0E+00   20 F  T
+     62   4        1.9070772293E+02 7.1E-01   849 4.3E-01   12 F  T
+     63   4        1.9066634019E+02 4.2E-01   843 1.0E+00   14 F  T
+ 
+   Iter Phase Ninf     Objective     RGmax    NSB   Step InItr MX OK
+     64   4        1.9054304598E+02 6.5E-01   844 1.6E-01   14 F  T
+     65   4        1.9053167875E+02 1.1E-01   841 1.0E+00   11 F  T
